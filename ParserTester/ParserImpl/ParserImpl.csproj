@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ParserImpl</RootNamespace>
+    <AssemblyName>ParserImpl</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Grammar\DefinitionGrammar.cs" />
+    <Compile Include="Grammar\EntityBase.cs" />
+    <Compile Include="Grammar\GrammarBuilder.cs" />
+    <Compile Include="Grammar\GrammarNavigator.cs" />
+    <Compile Include="Grammar\Interfaces.cs" />
+    <Compile Include="Grammar\Rule.cs" />
+    <Compile Include="Grammar\RuleExpression.cs" />
+    <Compile Include="Grammar\RuleSet.cs" />
+    <Compile Include="IFreezable.cs" />
+    <Compile Include="Impl\AnalyzerGraphBuilder.cs" />
+    <Compile Include="Impl\AnalyzerGraphBuilder.RecursionRewriter.cs" />
+    <Compile Include="Impl\FSM.cs" />
+    <Compile Include="Impl\Parser.cs" />
+    <Compile Include="Impl\ParserContext.cs" />
+    <Compile Include="Impl\ParserFabric.cs" />
+    <Compile Include="Impl\ParserGraphPrinter.cs" />
+    <Compile Include="Impl\ParserInitialStateFabric.cs" />
+    <Compile Include="Impl\ParserNode.cs" />
+    <Compile Include="Impl\ParserState.cs" />
+    <Compile Include="Impl\ParserStep.cs" />
+    <Compile Include="Impl\ParsingTreeNode.cs" />
+    <Compile Include="Impl\ParsingTreePrinter.cs" />
+    <Compile Include="Impl\RecursionRewritingCompensator.cs" />
+    <Compile Include="Interfaces.cs" />
+    <Compile Include="Location.cs" />
+    <Compile Include="Map\Mapping.cs" />
+    <Compile Include="Map\MappingContext.cs" />
+    <Compile Include="ParserResources1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ParserResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Parsers.cs" />
+    <Compile Include="ParsingTreeWalker.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringSourceTextReader.cs" />
+    <Compile Include="System\Collections\Generic\CollectionsUtils.cs" />
+    <Compile Include="System\Extensions.cs" />
+    <Compile Include="System\FakeNamedAccessor.cs" />
+    <Compile Include="System\IO\BinaryLog.cs" />
+    <Compile Include="System\IO\ExpandableMemoryStream.cs" />
+    <Compile Include="System\IO\IBinaryReader.cs" />
+    <Compile Include="System\IO\IBinaryWriter.cs" />
+    <Compile Include="System\IO\IntPacker.cs" />
+    <Compile Include="System\IO\IOExtensions.cs" />
+    <Compile Include="System\IO\StreamBinaryCursor.cs" />
+    <Compile Include="System\IO\StreamBinaryReader.cs" />
+    <Compile Include="System\IO\StreamBinaryWriter.cs" />
+    <Compile Include="System\MyEnvironment.cs" />
+    <Compile Include="System\Text\IndentedWriter.cs" />
+    <Compile Include="System\Threading\RWLock.cs" />
+    <Compile Include="Xml\Info\XmlDocParsingContext.cs" />
+    <Compile Include="Xml\Info\XmlName.cs" />
+    <Compile Include="Xml\Info\XmlParsingExtensions.cs" />
+    <Compile Include="Xml\Model\XmlAttribute.cs" />
+    <Compile Include="Xml\Model\XmlDocument.cs" />
+    <Compile Include="Xml\Model\XmlNode.cs" />
+    <Compile Include="Xml\XmlModelAttributesAnalyzer.cs" />
+    <Compile Include="Xml\XmlModelElementAnalyzer.cs" />
+    <Compile Include="Xml\XmlModelItemAnalyzer.cs" />
+    <Compile Include="Xml\XmlModelNavigator.cs" />
+    <Compile Include="Xml\XmlModelNavigatorBase.NavContext.cs" />
+    <Compile Include="Xml\XmlModelWriter.cs" />
+    <Compile Include="Xml\XmlNodeName.cs" />
+    <Compile Include="Xml\XmlParser.cs" />
+    <Compile Include="Xml\XmlResources.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ParserResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ParserResources1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Xml\XmlResources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Xml\Resources\old-xml-grammar.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Definitions\asmgram.pdsl" />
+    <None Include="Definitions\calcgram-new.pdsl" />
+    <None Include="Definitions\calcgram.pdsl" />
+    <None Include="Definitions\coloring.pdsl" />
+    <None Include="Definitions\cs-new.pdsl" />
+    <None Include="Definitions\cs.pdsl" />
+    <None Include="Definitions\defgrammar.pdsl" />
+    <None Include="Definitions\Highlightings\calc.h.pdsl" />
+    <None Include="Definitions\Highlightings\coloring.h.pdsl" />
+    <None Include="Definitions\Highlightings\dark-target.h.pdsl" />
+    <None Include="Definitions\Highlightings\definition.h.pdsl" />
+    <None Include="Definitions\regex.pdsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Impl\Old1\" />
+    <Folder Include="System\Linq\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

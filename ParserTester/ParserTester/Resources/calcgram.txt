@@ -1,0 +1,19 @@
+﻿[OmitPattern("[\s]*")]
+[RootRule(expr)]
+SimpleArithmetics {
+    value: "[0-9]+";
+    num: value | ((!value err)+ value);
+    #braces: '(' expr ')';
+
+    #parg: braces | num;
+    product: parg (productOp parg)+;
+    productOp: '*' | '/';
+
+    #sarg: product | braces | num;
+    sum: sarg (sumOp sarg)+;
+    sumOp: '+' | '-';
+
+    #expr: sum | product | braces | num;
+    
+    err: ".";
+}

@@ -1,0 +1,24 @@
+﻿[RootRule(doc)]
+[OmitPattern("[\s]*")]
+XmlDoc {
+
+	doc: decl comments element comments;
+
+	decl: '<?xml' attrs '?>';
+
+	comments: comment*;
+	element: '<' name attrs '/>' | ('>' elContent '</' name '>');
+	attrs: attr*;
+	attr: name '=' '"' avalue '"';
+	elContent: (comment | cdata | element | text)*;
+	cdata: '<![CDATA[' dtext ']]>';
+	comment: '<!--' ctext '-->';
+
+	ctext: "(([^\-])|([\-][^\-])|([\-][\-][^\>]))*" ;
+	dtext: "(([^\]])|([\]][^\]])|([\]][\]][^\>]))*" ;
+	text: "[^<]+";
+	name: namePrefix identifier;
+	namePrefix: (identifier ':')?;
+	identifier: "[_a-zA-Z][_a-zA-Z0-9]*";
+	avalue: "[^\"]"*;
+}

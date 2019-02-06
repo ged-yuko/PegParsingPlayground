@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserTester", "ParserTester\ParserTester.csproj", "{ED883A82-B273-464F-BED9-5EFCE75B2036}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserImpl", "ParserImpl\ParserImpl.csproj", "{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Net35 = Debug|Net35
+		Debug|Net40 = Debug|Net40
+		Debug|WithNRefactory = Debug|WithNRefactory
+		Release|Any CPU = Release|Any CPU
+		Release|Net35 = Release|Net35
+		Release|Net40 = Release|Net40
+		Release|WithNRefactory = Release|WithNRefactory
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Debug|Net35.ActiveCfg = Debug|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Debug|Net35.Build.0 = Debug|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Debug|Net40.ActiveCfg = Debug|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Debug|Net40.Build.0 = Debug|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Debug|WithNRefactory.ActiveCfg = Debug|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Debug|WithNRefactory.Build.0 = Debug|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Release|Net35.ActiveCfg = Release|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Release|Net35.Build.0 = Release|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Release|Net40.ActiveCfg = Release|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Release|Net40.Build.0 = Release|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Release|WithNRefactory.ActiveCfg = Release|Any CPU
+		{ED883A82-B273-464F-BED9-5EFCE75B2036}.Release|WithNRefactory.Build.0 = Release|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Debug|Net35.ActiveCfg = Debug|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Debug|Net35.Build.0 = Debug|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Debug|Net40.ActiveCfg = Debug|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Debug|Net40.Build.0 = Debug|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Debug|WithNRefactory.ActiveCfg = Debug|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Debug|WithNRefactory.Build.0 = Debug|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Release|Net35.ActiveCfg = Release|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Release|Net35.Build.0 = Release|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Release|Net40.ActiveCfg = Release|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Release|Net40.Build.0 = Release|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Release|WithNRefactory.ActiveCfg = Release|Any CPU
+		{DC3C6BC8-740F-4082-96EE-354A2D7F0ED4}.Release|WithNRefactory.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {00E7AA75-7A25-42C6-B29D-66801BD39BD1}
+	EndGlobalSection
+EndGlobal

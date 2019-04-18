@@ -73,7 +73,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <TextBox Name="txtText" KeyUp="txtText_OnKeyDown" />
+                        <TextBox Name="txtText" KeyUp="InputTextChanged" />
                     </DockPanel>
                 </TabItem>
             </TabControl>
@@ -110,10 +110,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <sh:SyntaxHighlightTextBox Name="txtGrammar" KeyUp="txtGrammar_OnKeyDown" Style="{StaticResource LightTheme}" />
-                        <!--<my:CustomTextEditor x:Name="txtGrammar" KeyUp="txtGrammar_OnKeyDown" ShowLineNumbers="True" />-->
-                        <!--FontFamily="Consolas" FontSize="10pt" SyntaxHighlighting="C#" -->
-                        <!--<TextBox Name="txtGrammar" KeyUp="txtGrammar_OnKeyDown" />-->
+                        <sh:SyntaxHighlightTextBox Name="txtGrammar" KeyUp="GrammarChanged" Style="{StaticResource LightTheme}" />
                     </DockPanel>
                 </TabItem>
             </TabControl>

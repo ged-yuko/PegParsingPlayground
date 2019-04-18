@@ -1,43 +1,43 @@
-﻿//using ICSharpCode.AvalonEdit;
-//using ICSharpCode.AvalonEdit.CodeCompletion;
-//using ICSharpCode.AvalonEdit.Document;
-//using ICSharpCode.AvalonEdit.Folding;
-//using ICSharpCode.AvalonEdit.Highlighting;
-//using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-//using ICSharpCode.AvalonEdit.Rendering;
-//using Microsoft.Win32;
-
-using ParserImpl;
+﻿using ParserImpl;
 using ParserImpl.Grammar;
-using ParserImpl.Impl;
 using SyntaxHighlight;
-using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Diagnostics;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
-using System.Xml;
 
 
 namespace ParserTester
 {
-    public class GrammarSyntaxLexer : SyntaxHighlight.ISyntaxLexer, IParsingTreeNodeVisitor
+    public class GrammarSyntaxLexer : ISyntaxLexer, IParsingTreeNodeVisitor
     {
         private IParser<ITreeParsingResult> _parser;
         private StringSourceTextReader _currReader;
-        private static readonly List<List<KeyValuePair<IParsingTreeTerminal, HighlightingColor>>> _empty = new List<List<KeyValuePair<IParsingTreeTerminal, HighlightingColor>>>();
         private List<List<KeyValuePair<IParsingTreeTerminal, HighlightingColor>>> _lines = new List<List<KeyValuePair<IParsingTreeTerminal, HighlightingColor>>>();
         private ITreeParsingResult _result;
-        private System.Diagnostics.Stopwatch _sw = new System.Diagnostics.Stopwatch();
+        private Stopwatch _sw = new Stopwatch();
+        private LinkedList<string> _rules = new LinkedList<string>();
 
-        public override Key SuggestionListTriggerKey
-        {
-            get { return Key.Escape; }
-        }
+        private readonly string[] _keywords = new string[] {
+            "attributesCollection",
+            "alternatives",
+            "group",
+            "check",
+            "checkNot",
+            "flag",
+            "extendable",
+            "alternative",
+            "subRules",
+            "ruleSet",
+            "ruleSetImport",
+            "quantor",
+            "ruleDef",
+            "attributeUsageArgList",
+            "qnumber",
+        };
+
+        public override Key SuggestionListTriggerKey => Key.Escape;
         public override bool CanShowSuggestionList(int caret_position)
         {
             return false;
@@ -46,82 +46,61 @@ namespace ParserTester
         public GrammarSyntaxLexer()
         {
             _parser = DefinitionGrammar.ParserFabric.CreateTreeParser();
-            // _parser.EnableLog = true;
-            //base.Tokens = _tokens;
         }
 
         public override void Parse(string text, int caret_position)
         {
             _tokens.Clear();
-            this.Parse(new StringSourceTextReader(text));
+            Parse(new StringSourceTextReader(text));
         }
 
         public List<List<KeyValuePair<IParsingTreeTerminal, HighlightingColor>>> ReParse(StringSourceTextReader reader, Location limit)
         {
+            ITreeParsingResult result = null;
             try
             {
                 _currReader = reader;
 
                 _sw.Reset();
                 _sw.Start();
-                var result = _parser.ReParse(_currReader, _result, limit);
+                result = _parser.ReParse(_currReader, _result, limit);
                 _sw.Stop();
-                System.Diagnostics.Debug.WriteLine(_sw.Elapsed);
-
-                if (result.Tree != null)
-                {
-                    _lines.Clear();
-                    result.Tree.Visit(this);
-                    _result = result;
-
-                    // System.IO.File.WriteAllText(@"v:\reparsed.txt", RulesParsingTreePrinter.CollectTree(result.Tree));
-                    return _lines;
-                }
+                Debug.WriteLine(_sw.Elapsed);
             }
             catch
             {
             }
 
-            return _empty;
+            return SaveParseResult(result);
         }
 
         public List<List<KeyValuePair<IParsingTreeTerminal, HighlightingColor>>> Parse(StringSourceTextReader reader)
         {
+            ITreeParsingResult result = null;
+
             try
             {
                 _currReader = reader;
 
                 _sw.Reset();
                 _sw.Start();
-                var result = _parser.Parse(_currReader);
+                result = _parser.Parse(_currReader);
                 _sw.Stop();
-                System.Diagnostics.Debug.WriteLine(_sw.Elapsed);
+                Debug.WriteLine(_sw.Elapsed);
 
-                if (result.Tree != null)
-                {
-                    _lines.Clear();
-                    result.Tree.Visit(this);
-                    _result = result;
-
-                    // System.IO.File.WriteAllText(@"v:\fullparsed.txt", RulesParsingTreePrinter.CollectTree(result.Tree));
-
-                    return _lines;
-                }
+                return SaveParseResult(result);
             }
             catch
             {
             }
-
-            return _empty;
+            return SaveParseResult(result);
         }
 
-        private LinkedList<string> _rules = new LinkedList<string>();
-
-        void IParsingTreeNodeVisitor.VisitGroup(IParsingTreeGroup group)
+        public void VisitGroup(IParsingTreeGroup group)
         {
-            _rules.AddLast(group.Rule == null ? string.Empty : group.Rule.Name);
+            _rules.AddLast(group?.Rule?.Name ?? string.Empty);
 
-            foreach (var item in group.GetRuleChilds())
+            foreach (IParsingTreeNode item in group.GetRuleChilds())
             {
                 item.Visit(this);
             }
@@ -129,60 +108,54 @@ namespace ParserTester
             _rules.RemoveLast();
         }
 
-        private string[] _keywords = @"attributesCollection
-alternatives
-group
-check
-checkNot
-flag
-extendable
-alternative
-subRules
-ruleSet
-ruleSetImport
-quantor
-ruleDef
-attributeUsageArgList
-qnumber".Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-
-        void IParsingTreeNodeVisitor.VisitTerminal(IParsingTreeTerminal terminal)
+        public void VisitTerminal(IParsingTreeTerminal terminal)
         {
             CodeTokenType tt;
 
-            var rn = _rules.Last;
-            if (rn.Value == "name")
+            switch (_rules.Last.Value)
             {
-                tt = CodeTokenType.Indentifier;
-            }
-            else if (rn.Value == "number")
-            {
-                tt = CodeTokenType.Number;
-            }
-            else if (rn.Value == "string" || rn.Value == "chars" || rn.Value == "charCode" || rn.Value == "anyChar")
-            {
-                tt = CodeTokenType.String;
-            }
-            else if (_keywords.Contains(rn.Value) || rn.Previous.Value == "qnumbers")
-            {
-                tt = CodeTokenType.Keyword;
-            }
-            else
-            {
-                tt = CodeTokenType.None;
-            }
+                case "name":
+                    tt = CodeTokenType.Indentifier;
+                    break;
 
-            this.AddToken(terminal, tt);
+                case "number":
+                    tt = CodeTokenType.Number;
+                    break;
+
+                case "string":
+                case "chars":
+                case "charCode":
+                case "antChar":
+                    tt = CodeTokenType.String;
+                    break;
+
+                default:
+                    if (_keywords.Contains(_rules.Last.Value) || _rules.Last.Previous.Value == "qnumbers")
+                    {
+                        tt = CodeTokenType.Keyword;
+                    }
+                    else
+                    {
+                        tt = CodeTokenType.None;
+                    }
+                    break;
+            }
+            AddToken(terminal, tt);
         }
 
-        //public enum CodeTokenType
-        //{
-        //    Keyword = 0,
-        //    String = 1,
-        //    Number = 2,
-        //    Comment = 3,
-        //    Indentifier = 4,
-        //    None = 5,
-        //}
+        private List<List<KeyValuePair<IParsingTreeTerminal, HighlightingColor>>> SaveParseResult(ITreeParsingResult parsingResult)
+        {
+            if (parsingResult?.Tree != null)
+            {
+                _lines.Clear();
+                parsingResult.Tree.Visit(this);
+                _result = parsingResult;
+
+                return _lines;
+            }
+
+            return new List<List<KeyValuePair<IParsingTreeTerminal, HighlightingColor>>>();
+        }
 
         private static readonly Dictionary<CodeTokenType, HighlightingColor> _brushes = new Dictionary<CodeTokenType, HighlightingColor>() {
             { CodeTokenType.Keyword, new HighlightingColor() { Foreground = new SimpleHighlightingBrush(Colors.Blue) } },
@@ -197,11 +170,14 @@ qnumber".Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
         {
             var from = term.From;
             while (_lines.Count <= from.Line)
+            {
                 _lines.Add(new List<KeyValuePair<IParsingTreeTerminal, HighlightingColor>>());
+            }
 
             _lines[from.Line].Add(new KeyValuePair<IParsingTreeTerminal, HighlightingColor>(term, _brushes[type]));
 
-            _tokens.Add(new SyntaxHighlight.CodeToken() {
+            _tokens.Add(new CodeToken()
+            {
                 Start = _currReader.GetPosition(term.From),
                 End = _currReader.GetPosition(term.To),
                 TokenType = type
@@ -219,7 +195,7 @@ qnumber".Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
             public SimpleHighlightingBrush(Color color)
             {
-                this.Color = color;
+                Color = color;
             }
         }
     }

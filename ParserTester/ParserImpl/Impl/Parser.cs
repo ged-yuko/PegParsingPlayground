@@ -48,8 +48,7 @@ namespace ParserImpl.Impl
 
         public TResult ReParse(ISourceTextReader source, IParsingResult oldResult, Location limit)
         {
-            var realOldResult = oldResult as TResult;
-            if (realOldResult == null)
+            if (!(oldResult is TResult realOldResult))
                 throw new ArgumentException();
 
             var ctx = new ParserContext<TResult>(this, _analyzerInfo, source, _initialStateFabric, realOldResult, limit);

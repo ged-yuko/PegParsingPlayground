@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace ParserImpl.Impl
 {
-    abstract class FSM
+    public abstract class FSM
     {
         public FSM()
         {

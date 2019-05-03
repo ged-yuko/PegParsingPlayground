@@ -8,7 +8,7 @@ using ParserImpl.Grammar;
 
 namespace ParserImpl.Impl
 {
-    interface IParserNodeVisitor
+    public interface IParserNodeVisitor
     {
         void VisitFsm(ParserNode.FsmParserNode fsmParserNode);
 
@@ -27,7 +27,7 @@ namespace ParserImpl.Impl
         void VisitAlternatives(ParserNode.Alternatives alternatives);
     }
 
-    abstract class ParserNode
+    public abstract class ParserNode
     {
         static long _idCount = 0;
         static long GetNextId() { return System.Threading.Interlocked.Increment(ref _idCount); }

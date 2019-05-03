@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ParserImpl.Grammar;
+using ParserImpl.Impl;
 
 namespace ParserImpl
 {
@@ -128,7 +129,7 @@ namespace ParserImpl
 
     public interface IParsingTreeNode
     {
-        // ParserNode GrammarNode { get; }
+        ParserNode GrammarNode { get; }
         Location Location { get; }
 
         Rule Rule { get; }

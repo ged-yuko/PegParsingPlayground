@@ -83,10 +83,7 @@ namespace ParserImpl.Grammar
         public ExplicitRule(int tokenId, string name, RuleExpression expression)
             : base(tokenId, name)
         {
-            if (expression == null)
-                throw new ArgumentNullException();
-
-            this.Expression = expression;
+            this.Expression = expression ?? throw new ArgumentNullException();
         }
 
         protected override void VisitImpl(IRuleSetVisitor visitor)

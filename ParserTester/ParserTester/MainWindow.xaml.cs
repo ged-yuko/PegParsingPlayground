@@ -114,6 +114,8 @@ namespace ParserTester
 
         private IParserFabric _fabric;
 
+        private IEvolutionalParser _evolutionalParser;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -125,6 +127,8 @@ namespace ParserTester
             txtGrammar.Text = ToolResources.CalcGrammar;
 
             FullTree = new ParsingTreeNodeInfo(null, null, null, false);
+
+            _evolutionalParser = new EvolutionalParser();
 
             AppendLog(DefinitionGrammar.ParserFabric.GetDebugInfo());
         }
@@ -214,6 +218,19 @@ namespace ParserTester
         private void InputTextChanged(object sender, KeyEventArgs e)
         {
             lblTextCaretPosition.Content = FormatCaretPosition(txtText);
+
+            if (CurrentRules != null)
+            {
+                try
+                {
+                    var textReader = new StringSourceTextReader(txtText.Text);
+                    IParsingTreeNode parsingResult = _evolutionalParser.Parse(FullTree.Node, textReader, CurrentRules, GetTextChangesLocation(txtText), false);
+                    SetTrees(parsingResult, textReader);
+                }
+                catch (Exception ex) {
+                    AppendLog(ex.ToString());
+                }
+            }
         }
 
         private Location GetTextChangesLocation(TextBox textBox)

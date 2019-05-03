@@ -28,7 +28,7 @@ namespace ParserImpl
                 //{
                 //    continue;
                 //}
-                if ((item as ParsingTreeNode).GrammarNode is ParserNode.RecursiveParserNode)
+                if ((item as IParsingTreeNode).GrammarNode is ParserNode.RecursiveParserNode)
                 {
                     foreach (var subitem in (item as IParsingTreeGroup).GetRuleChildsImpl(disableExpanding, skipOmitFragments, depth + 1))
                         yield return subitem;

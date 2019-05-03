@@ -58,6 +58,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EvolutionalParser.cs" />
+    <Compile Include="IEvoltionalParser.cs" />
+    <Compile Include="ReplacedGroupNode.cs" />
+    <Compile Include="ReplacedTerminal.cs" />
     <Compile Include="ToolResources1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

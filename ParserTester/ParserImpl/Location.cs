@@ -24,6 +24,16 @@ namespace ParserImpl
             return string.Format("[L{0}, C{1}]", _line, _column);
         }
 
+        public static Location operator -(Location a, Location b)
+        {
+            return new Location(a.Line - b.Line, a.Column - b.Column);
+        }
+
+        public static Location operator +(Location a, Location b)
+        {
+            return new Location(a.Line + b.Line, a.Column + b.Column);
+        }
+
         public static bool operator >(Location a, Location b)
         {
             return a.Line > b.Line ? true : (a.Line == b.Line && a.Column > b.Column);

@@ -71,8 +71,7 @@ namespace ParserImpl
 
         public int GetPosition(Location location)
         {
-            int ret;
-            if (!this.TryGetPosition(location, out ret))
+            if (!this.TryGetPosition(location, out int ret))
                 throw new ArgumentOutOfRangeException();
 
             return ret;
@@ -121,11 +120,9 @@ namespace ParserImpl
             var line = _line;
             var column = _column;
 
-            for (i = _pos, j = 0; i < _text.Length && i >= 0 && j < count; i += step, j++, column += step)
+            for (i = _pos, j = 0; (i < _text.Length || step < 0) && i >= 0 && j < count; i += step, j++, column += step)
             {
-                var c = _text[i];
-
-                if (c == _newLine)
+                if (i < _text.Length && _text[i] == _newLine)
                 {
                     line += step;
                     column = step > 0 ? -step : this.FindLineStart(i - 1);

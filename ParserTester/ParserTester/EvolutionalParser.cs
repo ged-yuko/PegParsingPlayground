@@ -47,38 +47,51 @@ namespace ParserTester
             IParsingTreeTerminal affectedNode = FindAffectedNode(tree, textReader.Location);
             ISourceTextReader oldContentReader = new StringSourceTextReader(affectedNode.Content);
             string renewedContent;
-            char addedChar;
             Location newToLocation;
 
             if (isDeleting)
             {
-                throw new NotImplementedException();
+                renewedContent = TryRemoveChar(textReader, location, affectedNode, oldContentReader, out newToLocation);
             }
             else
             {
-                // inserting new character
-                textReader.MoveTo(location);
-                textReader.MovePrev();
-                addedChar = textReader.Character;
-
-                // TODO: Newlines
-                oldContentReader.MoveTo(location - affectedNode.Location - new Location(0, 1));
-                if (oldContentReader.GetPosition() > 0)
-                {
-                    oldContentReader.MovePrev();
-                }
-
-                renewedContent = affectedNode.Content.Insert(oldContentReader.GetPosition(), addedChar.ToString());
-                newToLocation = new Location(affectedNode.To.Line, affectedNode.To.Column + 1);
+                renewedContent = TryAddChar(textReader, location, affectedNode, oldContentReader, out newToLocation);
             }
 
-            if (IsUpdatedContentMathOldNode(affectedNode, renewedContent))
+            if (IsUpdatedContentMatсhOldNode(affectedNode, renewedContent))
             {
                 var replacement = new ReplacedNode(affectedNode, renewedContent, affectedNode.From, newToLocation);
                 return NodeWithReplacedNode(tree, affectedNode, replacement, location, newToLocation - affectedNode.To);
             }
 
             return tree;
+        }
+
+        private string TryRemoveChar(ISourceTextReader textReader, Location location, IParsingTreeTerminal affectedNode, ISourceTextReader oldNodeContentReader, out Location newToLocation)
+        {
+            newToLocation = new Location(affectedNode.To.Line, affectedNode.To.Column - 1);
+
+            oldNodeContentReader.MoveTo(location - affectedNode.Location);
+
+            return affectedNode.Content.Remove(oldNodeContentReader.GetPosition(), 1);
+        }
+
+        private static string TryAddChar(ISourceTextReader textReader, Location location, IParsingTreeTerminal affectedNode, ISourceTextReader oldNodeContentReader, out Location newToLocation)
+        {
+            textReader.MoveTo(location);
+            textReader.MovePrev();
+            char addedChar = textReader.Character;
+
+            // TODO: Newlines
+            oldNodeContentReader.MoveTo(location - affectedNode.Location - new Location(0, 1));
+            if (oldNodeContentReader.GetPosition() > 0)
+            {
+                oldNodeContentReader.MovePrev();
+            }
+            
+            newToLocation = new Location(affectedNode.To.Line, affectedNode.To.Column + 1);
+
+            return affectedNode.Content.Insert(oldNodeContentReader.GetPosition(), addedChar.ToString());
         }
 
         private IParsingTreeNode NodeWithReplacedNode(IParsingTreeNode node, IParsingTreeNode affectedNode, IParsingTreeNode replacedNode, Location changedAt, Location differ)
@@ -116,7 +129,7 @@ namespace ParserTester
             }
         }
 
-        private bool IsUpdatedContentMathOldNode(IParsingTreeNode affectedNode, string renewedContent)
+        private bool IsUpdatedContentMatсhOldNode(IParsingTreeNode affectedNode, string renewedContent)
         {
             switch (affectedNode.Expression)
             {

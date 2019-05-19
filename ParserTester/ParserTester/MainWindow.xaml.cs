@@ -116,13 +116,15 @@ namespace ParserTester
 
         private IEvolutionalParser _evolutionalParser;
 
+        private string _oldText;
+
         public MainWindow()
         {
             InitializeComponent();
 
             txtGrammar.SyntaxLexer = new GrammarSyntaxLexer();
 
-            txtText.Text = "9 - (4 + (8 / 2) * 3) + 4 * (2 + 3 / 3 - 1)";
+            _oldText = txtText.Text = "9 - (4 + (8 / 2) * 3) + 4 * (2 + 3 / 3 - 1)";
             //txtGrammar.Text = ParserResources.CalcGrammarNew; // ToolResources.CalcGrammar;
             txtGrammar.Text = ToolResources.CalcGrammar;
 
@@ -224,7 +226,10 @@ namespace ParserTester
                 try
                 {
                     var textReader = new StringSourceTextReader(txtText.Text);
-                    IParsingTreeNode parsingResult = _evolutionalParser.Parse(FullTree.Node, textReader, CurrentRules, GetTextChangesLocation(txtText), false);
+                    bool isDeleting = _oldText.Length > txtText.Text.Length;
+                    _oldText = txtText.Text;
+
+                    IParsingTreeNode parsingResult = _evolutionalParser.Parse(FullTree.Node, textReader, CurrentRules, GetTextChangesLocation(txtText), isDeleting);
                     SetTrees(parsingResult, textReader);
                 }
                 catch (Exception ex) {

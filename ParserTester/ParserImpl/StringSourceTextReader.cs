@@ -130,7 +130,7 @@ namespace ParserImpl
             }
 
             if (column < 0)
-                throw new NotImplementedException("");
+                return false;
 
             bool ok;
             if (i <= _text.Length && i >= 0)

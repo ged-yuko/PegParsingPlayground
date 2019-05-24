@@ -124,7 +124,7 @@ namespace ParserTester
                         return new ReplacedNode(
                             terminal,
                             terminal.Content,
-                            terminal.From,
+                            terminal.From + (terminal.From.Line == changedAt.Line ? new Location(0, differ.Column) : new Location(differ.Line, 0)),
                             terminal.To + (terminal.To.Line == changedAt.Line ? new Location(0, differ.Column) : new Location(differ.Line, 0))
                         );
                     }

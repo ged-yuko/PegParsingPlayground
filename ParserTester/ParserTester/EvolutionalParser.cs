@@ -41,26 +41,19 @@ namespace ParserTester
             textReader.MoveTo(location);
             textReader.MovePrev();
 
-            IEnumerable<IParsingTreeTerminal> affectedNodes = FindAffectedNode(tree, textReader.Location);
+            List<IParsingTreeTerminal> affectedNodes = FindAffectedNode(tree, textReader.Location).ToList();
 
             foreach (var affectedNode in affectedNodes)
             {
                 ISourceTextReader oldContentReader = new StringSourceTextReader(affectedNode.Content);
-                string renewedContent;
-                Location newToLocation;
 
-                if (isDeleting)
-                {
-                    renewedContent = TryRemoveChar(textReader, location, affectedNode, oldContentReader, out newToLocation);
+                string renewedContent = isDeleting
+                    ? TryRemoveChar(textReader, location, affectedNode, oldContentReader, out Location newToLocation)
+                    : TryAddChar(textReader, location, affectedNode, oldContentReader, out newToLocation);
 
-                    if (renewedContent is null)
-                    {
-                        continue;
-                    }
-                }
-                else
+                if (renewedContent is null)
                 {
-                    renewedContent = TryAddChar(textReader, location, affectedNode, oldContentReader, out newToLocation);
+                    continue;
                 }
 
                 if (IsUpdatedContentMatсhOldNode(affectedNode, renewedContent))

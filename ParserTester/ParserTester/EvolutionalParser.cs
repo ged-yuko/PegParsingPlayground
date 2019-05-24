@@ -43,7 +43,7 @@ namespace ParserTester
 
             List<IParsingTreeTerminal> affectedNodes = FindAffectedNode(tree, textReader.Location).ToList();
 
-            foreach (var affectedNode in affectedNodes)
+            foreach (IParsingTreeTerminal affectedNode in affectedNodes)
             {
                 ISourceTextReader oldContentReader = new StringSourceTextReader(affectedNode.Content);
 

@@ -9,7 +9,7 @@ namespace ParserTester
 {
     public class EvolutionalParser : IEvolutionalParser
     {
-        public IParsingTreeTerminal FindAffectedNode(IParsingTreeNode node, Location location)
+        public IEnumerable<IParsingTreeTerminal> FindAffectedNode(IParsingTreeNode node, Location location)
         {
             Stack<IParsingTreeNode> nodesStack = new Stack<IParsingTreeNode>();
             nodesStack.Push(node);
@@ -21,7 +21,7 @@ namespace ParserTester
                     case IParsingTreeTerminal terminal:
                         if (terminal.Location <= location && terminal.To >= location)
                         {
-                            return terminal;
+                            yield return terminal;
                         }
                         break;
 
@@ -30,12 +30,9 @@ namespace ParserTester
                         {
                             nodesStack.Push(child);
                         }
-
                         break;
                 }
             }
-
-            return null;
         }
 
         public IParsingTreeNode Parse(IParsingTreeNode tree, ISourceTextReader textReader, RuleSet[] currentRules, Location location, bool isDeleting)
@@ -44,27 +41,41 @@ namespace ParserTester
             textReader.MoveTo(location);
             textReader.MovePrev();
 
-            IParsingTreeTerminal affectedNode = FindAffectedNode(tree, textReader.Location);
-            ISourceTextReader oldContentReader = new StringSourceTextReader(affectedNode.Content);
-            string renewedContent;
-            Location newToLocation;
+            IEnumerable<IParsingTreeTerminal> affectedNodes = FindAffectedNode(tree, textReader.Location);
 
-            if (isDeleting)
+            foreach (var affectedNode in affectedNodes)
             {
-                renewedContent = TryRemoveChar(textReader, location, affectedNode, oldContentReader, out newToLocation);
-            }
-            else
-            {
-                renewedContent = TryAddChar(textReader, location, affectedNode, oldContentReader, out newToLocation);
+                ISourceTextReader oldContentReader = new StringSourceTextReader(affectedNode.Content);
+                string renewedContent;
+                Location newToLocation;
+
+                if (isDeleting)
+                {
+                    renewedContent = TryRemoveChar(textReader, location, affectedNode, oldContentReader, out newToLocation);
+
+                    if (renewedContent is null)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    renewedContent = TryAddChar(textReader, location, affectedNode, oldContentReader, out newToLocation);
+                }
+
+                if (IsUpdatedContentMatсhOldNode(affectedNode, renewedContent))
+                {
+                    var replacement = new ReplacedNode(affectedNode, renewedContent, affectedNode.From, newToLocation);
+                    return NodeWithReplacedNode(tree, affectedNode, replacement, location, newToLocation - affectedNode.To);
+                }
             }
 
-            if (IsUpdatedContentMatсhOldNode(affectedNode, renewedContent))
-            {
-                var replacement = new ReplacedNode(affectedNode, renewedContent, affectedNode.From, newToLocation);
-                return NodeWithReplacedNode(tree, affectedNode, replacement, location, newToLocation - affectedNode.To);
-            }
+            return RebuildTreeFromLocation(tree, textReader, currentRules, location);
+        }
 
-            return tree;
+        private IParsingTreeNode RebuildTreeFromLocation(IParsingTreeNode tree, ISourceTextReader textReader, RuleSet[] currentRules, Location location)
+        {
+            throw new NotImplementedException();
         }
 
         private string TryRemoveChar(ISourceTextReader textReader, Location location, IParsingTreeTerminal affectedNode, ISourceTextReader oldNodeContentReader, out Location newToLocation)
@@ -73,7 +84,14 @@ namespace ParserTester
 
             oldNodeContentReader.MoveTo(location - affectedNode.Location);
 
-            return affectedNode.Content.Remove(oldNodeContentReader.GetPosition(), 1);
+            try
+            {
+                return affectedNode.Content.Remove(oldNodeContentReader.GetPosition(), 1);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private static string TryAddChar(ISourceTextReader textReader, Location location, IParsingTreeTerminal affectedNode, ISourceTextReader oldNodeContentReader, out Location newToLocation)
